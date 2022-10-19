@@ -1,0 +1,99 @@
+consumes:
+- application/json
+info:
+  description: HTTP server in Go with Swagger endpoints definition
+  title: kutego-api
+  version: 0.1.0
+produces:
+- application/json
+# schemes:
+# - http
+
+swagger: "2.0"
+
+paths:
+  /healthz:
+    get:
+      operationId: checkHealth
+      produces:
+      - text/plain
+      responses:
+        '200':
+          description: OK message
+          schema:
+            type: string
+            enum:
+            - OK
+
+  /cat/{name}:
+    get:
+      description: Return the Cat Image
+      produces:
+      - image/png
+      parameters:
+        - name: name
+          in: path
+          type: string
+          required: true
+          description: The name of the Cat to display.
+        - name: size
+          in: query
+          type: string
+          required: false
+          description: Size for your Cat
+      responses:
+        200:
+          description: Returns the cat.
+          schema:
+            type: file
+        400:
+          description: Invalid characters in "name" were provided.
+  /cats:
+    get:
+      description: List all the cat
+      produces:
+       - application/json
+      parameters:
+        - name: name
+          in: query
+          type: string
+          required: false
+          description: Cat name
+      responses:
+        200:
+          description: Return the Cats list.
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Cat'
+  /cat/random:
+    get:
+      description: Return a random Cat Image
+      produces:
+      - image/png
+      parameters:
+        - name: size
+          in: query
+          type: string
+          required: false
+          description: Size for your Cat ('x-small','small','medium')
+      responses:
+        200:
+          description: Returns a random cat.
+          schema:
+            type: file
+        400:
+          description: there is something wrong in the path.
+definitions:
+  Cat:
+    type: object
+    properties:
+      name:
+        type: string
+        example: my-cat
+      path:
+        type: string
+        example: my-cat.gif
+      url:
+        type: string
+        example: https://raw.githubusercontent.com/Pandahoro/cats/main/arrow-cat.gif
